@@ -119,27 +119,48 @@ int tinhkc(int xfrom, int yfrom, int xto, int yto){
 	return tempx+tempy;
 }
 
-void backtrack(int i, int pre, int tong){
-
-	if (i == N)
+void backtrack(int i,int tong){
+	if (i > N)
 	{
-		
-		if (kc > tong + khoangc[pre][N+1])
+		tong = tong + khoangc[order[N]][N+1];
+		if (kc >tong)
 		{
-			kc  = tong+khoangc[pre][N+1];
+			kc = tong;
 		}
+		return;
+	}
+	/*
+	if (i > N)
+	{
+		int tong  = 0;
+		for (int h = 0; h <= N; h++)
+		{
+			tong = tong + khoangc[order[h]][order[h+1]];
+			
+		}
+		if (kc > tong )
+		{
+			kc = tong;
+			for (int k = 0; k < N+1; k++)
+			{
+				cout << order[k];
+			}
+			cout << endl;
+		}
+		
+	}*/
+	if (tong > kc)
+	{
+		return;
 	}
 	for (int j = 1; j <= N; j++)
 	{
-		if (visited[j] != 1)
+		if (visited[j] == 0)
 		{
-			if (tong > kc)
-			{
-				return;
-			}
 			visited[j] =1;
 			order[i] = j;
-			backtrack(i+1,j, tong += khoangc[pre][i]);
+
+			backtrack(i+1,tong + khoangc[order[i-1]][order[i]]);
 			visited[j] = 0;
 		}
 	}
@@ -173,8 +194,10 @@ int main(){
 		}
 		visited[0] = 1;
 		visited[N+1] = 1;
-		backtrack(1, 0, 0);
-		cout << kc << endl;
+		order[0] = 0;
+		order[N+1] = N+1;
+		backtrack(1 ,0);
+		cout <<"Case #" << tc << " "<< kc << endl;
 	}
 	return 0;
 }
