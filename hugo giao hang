@@ -88,3 +88,93 @@ Case #8 283
 Case #9 295
 
 Case #10 344
+//code
+#include<iostream>
+using namespace std;
+int stx, sty, endx, endy;
+int point[20][4], N;
+int khoangc[20][20];
+int visited[20];
+int kc = 9999;
+int order[20];
+
+int tinhkc(int xfrom, int yfrom, int xto, int yto){
+	int tempx;
+	if (xfrom - xto < 0)
+	{
+		tempx = (xfrom - xto)*(-1);
+	}else
+	{
+		tempx = xfrom - xto;
+	}
+	int tempy;
+	if (yfrom - yto < 0)
+	{
+		tempy = (yfrom - yto)*(-1);
+	}else
+	{
+		tempy = yfrom - yto;
+	}
+
+	return tempx+tempy;
+}
+
+void backtrack(int i, int pre, int tong){
+
+	if (i == N)
+	{
+		
+		if (kc > tong + khoangc[pre][N+1])
+		{
+			kc  = tong+khoangc[pre][N+1];
+		}
+	}
+	for (int j = 1; j <= N; j++)
+	{
+		if (visited[j] != 1)
+		{
+			if (tong > kc)
+			{
+				return;
+			}
+			visited[j] =1;
+			order[i] = j;
+			backtrack(i+1,j, tong += khoangc[pre][i]);
+			visited[j] = 0;
+		}
+	}
+}
+
+int main(){
+	freopen("input.txt","r",stdin);
+	int T;
+	cin >> T;
+	for (int tc = 1; tc <= T; tc++)
+	{
+		kc = 9999;
+		cin >> stx >> sty >> endx>> endy;
+		cin >>  N;
+		point[0][0] = stx;
+		point[0][1] = sty;
+		for (int i = 1; i <= N; i++)
+		{
+			cin >> point[i][0] >> point[i][1];
+		}
+		point[N+1][0] = endx;
+		point[N+1][1] = endy;
+		for (int i = 0; i <= N+1; i++)
+		{
+			for (int j = i+1; j <= N+1; j++)
+			{
+				int temp = tinhkc(point[i][0], point[i][1], point[j][0], point[j][1]);
+				khoangc[i][j] = temp;
+				khoangc[j][i] = temp;
+			}
+		}
+		visited[0] = 1;
+		visited[N+1] = 1;
+		backtrack(1, 0, 0);
+		cout << kc << endl;
+	}
+	return 0;
+}
