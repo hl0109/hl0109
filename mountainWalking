@@ -88,3 +88,113 @@ Output
 #4 50
 
 #5 43
+
+
+#include<iostream>
+
+using namespace std;
+
+int N;
+int a[101][101];
+int visit[101][101];
+int vimax[101][101];
+int vimin[101][101];
+int dx[4] = {-1,0,1,0};
+int dy[4] = {0,1,0,-1};
+int qx[1000000];
+int qy[1000000];
+int dau, cuoi;
+int lechMax, gtmax, gtmin;
+
+int tru(int a, int b)
+{
+	return a > b ? (a-b) : (b-a);
+}
+
+int BFS()
+{
+	int i, j, x, y, xt, yt, v, left, right;
+	int setMa, setMi;
+	if(a[1][1] > a[N][N])
+	{
+		setMa = a[1][1];
+		setMi = a[N][N];
+	}
+	else
+	{
+		setMi = a[1][1];
+		setMa = a[N][N];
+	}
+
+	for(v=setMa - setMi; v<=gtmax - gtmin; v++)
+	{
+		left = setMa-v;
+		if(left<0)
+		{
+			left = 0;
+		}
+		for(; left <= setMi; left++)
+		{
+			right = v + left;
+			
+			
+			for(i=1; i<=N; i++)
+				for(j=1; j<=N; j++)
+				{
+					visit[i][j] = 0; 
+				}
+				dau = cuoi = -1;
+				qx[++cuoi] = 1;
+				qy[cuoi] = 1;
+				visit[1][1] = 1;
+				while(dau<cuoi)
+				{
+					x = qx[++dau];
+					y = qy[dau];
+					for(i=0; i<4; i++)
+					{
+						xt = x + dx[i];
+						yt = y + dy[i];
+
+						if(xt > 0 && yt > 0 && xt <= N && yt <= N)
+							if(visit[xt][yt] == 0)
+							{
+								if(a[xt][yt] > right || a[xt][yt] < left)
+								{
+								}
+								else
+								{
+									visit[xt][yt] = 1;
+									qx[++cuoi] = xt;
+									qy[cuoi] = yt;
+									if(xt == N && yt == N)
+										return v;
+								}
+							}
+					}
+				}
+		}
+	}
+}
+
+int main()
+{
+		//freopen("out.txt", "w", stdout);
+	int tc, T;
+	int i, j;
+	cin >> T;
+	for(tc = 1; tc<=T; tc++)
+	{
+		cin >> N;
+		gtmax = 0; gtmin = 110;
+		for(i=1; i<=N; i++)
+			for(j=1; j<=N; j++)
+			{
+				cin >>  a[i][j];
+				gtmax = gtmax > a[i][j] ? gtmax : a[i][j];
+				gtmin = gtmin < a[i][j] ? gtmin : a[i][j];
+			}
+			cout << "#" << tc << " " << BFS() << endl;
+
+	}
+}
