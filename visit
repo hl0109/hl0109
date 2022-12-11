@@ -104,3 +104,79 @@ Output
 #4 3 0.700000 1 1.000000
 
 #5 4 0.860000 3 0.700000
+//code
+#include<iostream>
+using namespace std;
+int N, E, K, Time;
+float matrix[150][150];
+float time[150][150];
+int main(){
+	freopen("input.txt","r",stdin);
+	int  T;
+	cin >> T;
+	for (int tc = 1; tc <= T; tc++)
+	{
+		cin >> N >> E >> K >> Time;
+		int x, y;
+		float t;
+		for (int i = 0; i < 110; i++)
+		{
+			for (int j = 0; j < 110; j++)
+			{
+				matrix[i][j] = 0;
+				time[i][j] = 0;			
+			}
+		}
+		for (int i = 0; i < E; i++)
+		{
+			cin >> x >> y >> t;
+			matrix[x][y] = t;
+		}
+		time[1][1] = 1;
+		for (int i = 1; i <= Time/10 ; i++)
+		{
+			for (int j = 1; j <= N; j++)
+			{
+				if (time[j][i] != 0)
+				{
+					for (int k = 0; k <= N; k++)
+					{
+						if (matrix[j][k] != 0)
+						{
+							time[k][i+1] += matrix[j][k] * time[j][i];
+						}
+					}
+				}
+			}
+		}
+		cout << "#" <<tc<< " ";
+		float tmp = 0;int p = 0;
+		float tempKang = 0;int pK = 0;
+		for (int i = 1; i <= N; i++)
+		{
+			if (time[i][Time/10+1] > tmp)
+			{
+				tmp = time[i][Time/10+1];
+				p = i;
+			}
+			if (time[i][(Time-K)/10+1] > tempKang)
+			{
+				tempKang = time[i][(Time-K)/10+1];
+				pK = i;
+			}
+		}
+		if (p == 0)
+		{
+			tmp = 0;
+		}
+		if (pK == 0)
+		{
+			tempKang = 0;
+		}
+		printf("%d ", p);
+		printf("%0.6f ", tmp);
+		printf("%d ", pK);
+		printf("%0.6f\n", tempKang);
+	}
+	return 0;
+}
